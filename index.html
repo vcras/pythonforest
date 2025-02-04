@@ -3,63 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume</title>
+    <title>Login & Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <table border="0" width="100%" style="border-collapse: collapse;">
-        <tr>
-            <!-- Left Column -->
-            <td width="30%" valign="top" style="padding: 10px;">
-                <!-- Profile Image and Name -->
-                <div align="center">
-                    <img src="profile.jpg" alt="Profile Picture" width="100" height="100" style="border-radius: 50%;">
-                    <h2>John Doe</h2>
+<body class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-4 shadow-lg">
+                    <h2 class="text-center mb-4" id="formTitle">Register</h2>
+                    <div id="alertBox"></div>
+                    
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" id="fullName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                    
+                    <form id="loginForm" class="d-none">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" id="loginEmail" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" id="loginPassword" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Login</button>
+                    </form>
+                    
+                    <button class="btn btn-link mt-3" id="toggleForm">Already have an account? Login</button>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- Contact Details -->
-                <h3>Contact</h3>
-                <p>Email: <a href="mailto:rashedshaief@gmail.com">john.doe@example.com</a></p>
-                <p>Phone: +123 456 7890</p>
-                <p>LinkedIn: <a href="https://linkedin.com/in/rashedshaief" target="_blank">linkedin.com/in/johndoe</a></p>
-                <hr>
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const toggleForm = document.getElementById('toggleForm');
+        const formTitle = document.getElementById('formTitle');
+        const alertBox = document.getElementById('alertBox');
 
-                <!-- Education -->
-                <h3>Education</h3>
-                <p><strong>Bachelor of Science in Computer Science</strong></p>
-                <p>XYZ University, 2020</p>
-                <hr>
+        toggleForm.addEventListener('click', () => {
+            if (registerForm.classList.contains('d-none')) {
+                registerForm.classList.remove('d-none');
+                loginForm.classList.add('d-none');
+                formTitle.textContent = 'Register';
+                toggleForm.textContent = 'Already have an account? Login';
+            } else {
+                registerForm.classList.add('d-none');
+                loginForm.classList.remove('d-none');
+                formTitle.textContent = 'Login';
+                toggleForm.textContent = "Don't have an account? Register";
+            }
+        });
 
-                <!-- Skills -->
-                <h3>Skills</h3>
-                <ul>
-                    <li>Programming: Python, Java, C++</li>
-                    <li>Web Development: HTML, CSS, JavaScript</li>
-                    <li>Database Management: SQL, MongoDB</li>
-                </ul>
-            </td>
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (localStorage.getItem(email)) {
+                showAlert('Email already registered!', 'danger');
+            } else {
+                localStorage.setItem(email, JSON.stringify({ fullName, password }));
+                showAlert('Registration successful!', 'success');
+                registerForm.reset();
+            }
+        });
 
-            <!-- Right Column -->
-            <td width="70%" valign="top" style="padding: 10px;">
-                <!-- Work Experience -->
-                <h3>Work Experience</h3>
-                <p><strong>Software Engineer</strong></p>
-                <p>ABC Tech, 2020 - Present</p>
-                <ul>
-                    <li>Developed and maintained web applications.</li>
-                    <li>Collaborated with cross-functional teams to deliver projects on time.</li>
-                    <li>Optimized database queries, improving system performance by 30%.</li>
-                </ul>
-                <hr>
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const userData = JSON.parse(localStorage.getItem(email));
+            
+            if (userData && userData.password === password) {
+                showAlert(`Welcome, ${userData.fullName}!`, 'success');
+                loginForm.reset();
+            } else {
+                showAlert('Invalid email or password!', 'danger');
+            }
+        });
 
-                <!-- Projects -->
-                <h3>Projects</h3>
-                <p><strong>Personal Portfolio Website</strong></p>
-                <p>A responsive website showcasing my work and achievements. Built with HTML, CSS, and JavaScript.</p>
+        function showAlert(message, type) {
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertBox.innerHTML = '', 3000);
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-4 shadow-lg">
+                    <h2 class="text-center mb-4" id="formTitle">Register</h2>
+                    <div id="alertBox"></div>
+                    
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" id="fullName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                    
+                    <form id="loginForm" class="d-none">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" id="loginEmail" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" id="loginPassword" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Login</button>
+                    </form>
+                    
+                    <button class="btn btn-link mt-3" id="toggleForm">Already have an account? Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <p><strong>Inventory Management System</strong></p>
-                <p>A web-based tool for tracking inventory levels, orders, and sales, using Python and SQL.</p>
-            </td>
-        </tr>
-    </table>
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const toggleForm = document.getElementById('toggleForm');
+        const formTitle = document.getElementById('formTitle');
+        const alertBox = document.getElementById('alertBox');
+
+        toggleForm.addEventListener('click', () => {
+            if (registerForm.classList.contains('d-none')) {
+                registerForm.classList.remove('d-none');
+                loginForm.classList.add('d-none');
+                formTitle.textContent = 'Register';
+                toggleForm.textContent = 'Already have an account? Login';
+            } else {
+                registerForm.classList.add('d-none');
+                loginForm.classList.remove('d-none');
+                formTitle.textContent = 'Login';
+                toggleForm.textContent = "Don't have an account? Register";
+            }
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (localStorage.getItem(email)) {
+                showAlert('Email already registered!', 'danger');
+            } else {
+                localStorage.setItem(email, JSON.stringify({ fullName, password }));
+                showAlert('Registration successful!', 'success');
+                registerForm.reset();
+            }
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const userData = JSON.parse(localStorage.getItem(email));
+            
+            if (userData && userData.password === password) {
+                showAlert(`Welcome, ${userData.fullName}!`, 'success');
+                loginForm.reset();
+            } else {
+                showAlert('Invalid email or password!', 'danger');
+            }
+        });
+
+        function showAlert(message, type) {
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertBox.innerHTML = '', 3000);
+        }
+    </script>
 </body>
 </html>

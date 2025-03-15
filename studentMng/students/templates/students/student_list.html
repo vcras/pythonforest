@@ -1,0 +1,4 @@
+{% for student in students %}
+    <p>{{ student.name }} ({{ student.course }}) - <a href="{% url 'student_update' student.id %}">Edit</a> | <a href="{% url 'student_delete' student.id %}">Delete</a></p>
+{% endfor %}
+<a href="{% url 'student_create' %}">Add New Student</a>
